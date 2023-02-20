@@ -8,7 +8,6 @@ function populateForm() {
   const savedData = JSON.parse(localStorage.getItem(STORAGE_Key));
   const email = form.children[0].firstElementChild;
   const message = form.children[1].firstElementChild;
-  console.log(savedData);
 
   if (savedData && savedData.email) {
     email.value = savedData.email;
@@ -23,14 +22,21 @@ populateForm();
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  event.currentTarget.reset();
-  localStorage.removeItem(STORAGE_Key);
+
+  if (form.email.value && form.message.value) {
+    console.log(formData);
+    event.currentTarget.reset();
+    localStorage.removeItem(STORAGE_Key);
+  } else {
+    alert('Please fill out both email and message fields.');
+  }
 });
 
 form.addEventListener(
   'input',
-  throttle(event => {
-    formData[event.target.name] = event.target.value;
+  throttle(() => {
+    formData.email = form.email.value;
+    formData.message = form.message.value;
     localStorage.setItem(STORAGE_Key, JSON.stringify(formData));
   }, 500)
 );
